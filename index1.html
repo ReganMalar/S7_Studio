@@ -17,7 +17,7 @@ async function check() {
   var email = document.getElementById("email").value;
   //var url = "https://script.google.com/macros/s/AKfycbw2vF-X8bRGTruJlonEUJ57gDuir440N2uVmMfKggw-lrdKj0gPesQCtJq2M4l8SxLB/exec" + email;
 
-  var url = "https://script.google.com/macros/s/AKfycbw2vF-X8bRGTruJlonEUJ57gDuir440N2uVmMfKggw-lrdKj0gPesQCtJq2M4l8SxLB/exec?email=" + encodeURIComponent(email);
+  var url = "https://script.google.com/macros/s/AKfycbw2vF-X8bRGTruJlonEUJ57gDuir440N2uVmMfKggw-lrdKj0gPesQCtJq2M4l8SxLB/exec?email=" + email;
   var response = await fetch(url);
   var data = await response.json();
 

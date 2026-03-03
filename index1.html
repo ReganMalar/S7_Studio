@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Email Lookup</title>
+</head>
+<body style="text-align:center; margin-top:100px; font-family:Arial;">
+
+<h2>Check Your Details</h2>
+
+<input type="email" id="email" placeholder="Enter Email">
+<button onclick="check()">Check</button>
+
+<div id="result" style="margin-top:20px;"></div>
+
+<script>
+async function check() {
+  var email = document.getElementById("email").value;
+  var url = "https://script.google.com/macros/s/AKfycbw2vF-X8bRGTruJlonEUJ57gDuir440N2uVmMfKggw-lrdKj0gPesQCtJq2M4l8SxLB/exec" + email;
+
+  var response = await fetch(url);
+  var data = await response.json();
+
+  if (data.error) {
+    document.getElementById("result").innerHTML = "No record found";
+  } else {
+    let output = "<table border='1' style='margin:auto;'>";
+    for (let key in data) {
+      output += `<tr><th>${key}</th><td>${data[key]}</td></tr>`;
+    }
+    output += "</table>";
+    document.getElementById("result").innerHTML = output;
+  }
+}
+</script>
+
+</body>
+</html>

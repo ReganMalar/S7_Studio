@@ -106,6 +106,57 @@ th {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+.profile-card {
+  margin-top: 20px;
+  background: white;
+  color: #333;
+  border-radius: 15px;
+  padding: 20px;
+  animation: slideUp 0.5s ease-in-out;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 auto 10px;
+}
+
+.profile-card h3 {
+  margin: 5px 0;
+}
+
+.email {
+  font-size: 13px;
+  color: gray;
+  margin-bottom: 15px;
+}
+
+.details {
+  text-align: left;
+  margin-top: 10px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
+
+.detail-item span {
+  color: #666;
+}
 </style>
 </head>
 
@@ -141,12 +192,34 @@ async function check() {
     if (data.error) {
       document.getElementById("result").innerHTML = "<p>No record found</p>";
     } else {
-      let output = "<table>";
+
+      let profile = `
+        <div class="profile-card">
+          <div class="avatar">
+            ${data.Name ? data.Name.charAt(0).toUpperCase() : "U"}
+          </div>
+          <h3>${data.Name || "User"}</h3>
+          <p class="email">${data.Email || email}</p>
+          <div class="details">
+      `;
+
       for (let key in data) {
-        output += `<tr><th>${key}</th><td>${data[key]}</td></tr>`;
+        if (key !== "Name" && key !== "Email") {
+          profile += `
+            <div class="detail-item">
+              <span>${key}</span>
+              <strong>${data[key]}</strong>
+            </div>
+          `;
+        }
       }
-      output += "</table>";
-      document.getElementById("result").innerHTML = output;
+
+      profile += `
+          </div>
+        </div>
+      `;
+
+      document.getElementById("result").innerHTML = profile;
     }
   } catch (error) {
     document.getElementById("result").innerHTML = "Error connecting to server.";

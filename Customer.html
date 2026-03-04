@@ -1,112 +1,219 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Registration</title>
+<meta charset="UTF-8">
+<title>Professional Registration Form</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
+/* Page Styling */
 body {
-  font-family: Arial;
-  background: linear-gradient(135deg,#667eea,#764ba2);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  margin:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.card {
-  background:white;
-  padding:30px;
-  border-radius:15px;
-  width:350px;
-  box-shadow:0 15px 30px rgba(0,0,0,0.2);
+/* Form Card */
+.form-container {
+  background: #ffffff;
+  padding: 30px;
+  width: 380px;
+  border-radius: 15px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  animation: fadeIn 0.6s ease;
 }
 
 h2 {
-  text-align:center;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 }
 
-input, select {
-  width:100%;
-  padding:10px;
-  margin:10px 0;
-  border-radius:8px;
-  border:1px solid #ccc;
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.phone-group {
+  display: flex;
+  gap: 5px;
+}
+
+.phone-group select {
+  width: 35%;
+}
+
+.phone-group input {
+  width: 65%;
 }
 
 button {
-  width:100%;
-  padding:10px;
-  background:#764ba2;
-  color:white;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #667eea;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 button:hover {
-  opacity:0.9;
+  background: #5563c1;
 }
 
-#message {
-  text-align:center;
-  margin-top:10px;
+/* Popup */
+.popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
 }
+
+.popup-content {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  width: 300px;
+  animation: zoom 0.4s ease;
+}
+
+.checkmark {
+  font-size: 50px;
+  color: #28a745;
+  animation: bounce 0.6s ease;
+}
+
+.popup button {
+  margin-top: 15px;
+  background: #28a745;
+}
+
+.error {
+  color: red;
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Animations */
+@keyframes zoom {
+  from {transform: scale(0.7); opacity:0;}
+  to {transform: scale(1); opacity:1;}
+}
+
+@keyframes bounce {
+  0% {transform: scale(0);}
+  60% {transform: scale(1.2);}
+  100% {transform: scale(1);}
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(20px);}
+  to {opacity:1; transform: translateY(0);}
+}
+
 </style>
 </head>
-
 <body>
 
-<div class="card">
-<h2>Register</h2>
+<div class="form-container">
+  <h2>Registration Form</h2>
 
-<input type="text" id="name" placeholder="Full Name" required>
-<input type="email" id="email" placeholder="Email" required>
-<input type="text" id="phone" placeholder="Phone Number" required>
+  <div class="error" id="errorMsg"></div>
 
-<select id="payment">
-<option value="">Select Payment Method</option>
-<option>UPI</option>
-<option>Credit Card</option>
-<option>Debit Card</option>
-<option>Net Banking</option>
-<option>Cash</option>
-</select>
+  <form id="myForm">
 
-<button onclick="submitForm()">Submit</button>
+    <input type="text" name="name" placeholder="Full Name" required>
 
-<div id="message"></div>
+    <input type="email" name="email" id="email" placeholder="Email Address" required>
+
+    <div class="phone-group">
+      <select name="countryCode" required>
+        <option value="+91">+91 🇮🇳</option>
+        <option value="+1">+1 🇺🇸</option>
+        <option value="+44">+44 🇬🇧</option>
+        <option value="+971">+971 🇦🇪</option>
+      </select>
+      <input type="tel" name="phone" id="phone" placeholder="Phone Number" required pattern="[0-9]{10}">
+    </div>
+
+    <textarea name="address" placeholder="Address" required></textarea>
+
+    <select name="payment" required>
+      <option value="">Select Payment Method</option>
+      <option>UPI</option>
+      <option>Credit Card</option>
+      <option>Debit Card</option>
+      <option>Net Banking</option>
+    </select>
+
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<!-- Success Popup -->
+<div class="popup" id="successPopup">
+  <div class="popup-content">
+    <div class="checkmark">✓</div>
+    <h2>Success!</h2>
+    <p>Your details have been submitted successfully.</p>
+    <button onclick="closePopup()">OK</button>
+  </div>
 </div>
 
 <script>
-async function submitForm(){
 
-var data = {
-  name: document.getElementById("name").value,
-  email: document.getElementById("email").value,
-  phone: document.getElementById("phone").value,
-  payment: document.getElementById("payment").value
-};
+const scriptURL = "YOUR_WEB_APP_URL"; // paste Google Apps Script URL
+const form = document.getElementById("myForm");
+const errorMsg = document.getElementById("errorMsg");
 
-if(!data.name || !data.email || !data.phone || !data.payment){
-  document.getElementById("message").innerHTML = "Please fill all fields.";
-  return;
-}
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  errorMsg.innerHTML = "";
 
-var response = await fetch("https://script.google.com/macros/s/AKfycbxyPDOP30JaArY8VtiQJlxqEPngb1yIWhkIZWMsuQiyDA1IIyzH1Q1QEWHPk24NhnRo1g/exec", {
-  method: "POST",
-  body: JSON.stringify(data)
+  const phone = document.getElementById("phone").value;
+
+  if(phone.length !== 10){
+    errorMsg.innerHTML = "Phone number must be 10 digits.";
+    return;
+  }
+
+  fetch(scriptURL, { method: "POST", body: new FormData(form)})
+    .then(response => response.text())
+    .then(data => {
+
+      if(data === "DUPLICATE"){
+        errorMsg.innerHTML = "Email already exists!";
+      } else {
+        showPopup();
+        form.reset();
+      }
+
+    })
+    .catch(error => alert("Error submitting form"));
 });
 
-var result = await response.json();
+function showPopup(){
+  document.getElementById("successPopup").style.display = "flex";
+}
 
-if(result.status === "success"){
-  document.getElementById("message").innerHTML = "Submitted Successfully!";
-  document.querySelectorAll("input, select").forEach(el => el.value = "");
+function closePopup(){
+  document.getElementById("successPopup").style.display = "none";
 }
-}
+
 </script>
 
 </body>

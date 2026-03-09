@@ -175,56 +175,48 @@ button:hover {
 
 <script>
 
-const scriptURL = "https://script.google.com/macros/s/AKfycbytJbioH6IX2TsZn8FXPAi9omdYVOYAEcorq6gbhutXJddIFQ05XNNdCcpy9B6CJog9/exec"; // paste Google Apps Script URL
+const scriptURL = "https://script.google.com/macros/s/AKfycbytJbioH6IX2TsZn8FXPAi9omdYVOYAEcorq6gbhutXJddIFQ05XNNdCcpy9B6CJog9/exec";
 const form = document.getElementById("myForm");
 const errorMsg = document.getElementById("errorMsg");
 
-form.addEventListener("submit", e => {
+form.addEventListener("submit", function(e){
+
   e.preventDefault();
   errorMsg.innerHTML = "";
 
   const phone = document.getElementById("phone").value;
 
   if(phone.length !== 10){
-    errorMsg.innerHTML = "Phone number must be 10 digits.";
+    errorMsg.innerHTML = "Phone number must be 10 digits";
     return;
   }
 
-  fetch(scriptURL, { method: "POST", body: new FormData(form)})
-    .then(response => response.text())
-    .then(data => {
+  fetch(scriptURL,{
+    method:"POST",
+    body:new FormData(form)
+  })
+  .then(res => res.text())
+  .then(data => {
 
-      if(data === "DUPLICATE"){
-        errorMsg.innerHTML = "Email already exists!";
-      } else {
-        showPopup();
-        form.reset();
-      }
+    if(data === "DUPLICATE"){
+      errorMsg.innerHTML = "Email already exists!";
+    }
+    else if(data === "SUCCESS"){
+      document.getElementById("successPopup").style.display="flex";
+      form.reset();
+    }
 
-    })
-    .catch(error => alert("Error submitting form"));
+  })
+  .catch(err=>{
+    alert("Error submitting form");
+  });
+
 });
 
-function showPopup(){
-  document.getElementById("successPopup").style.display = "flex";
-}
-
 function closePopup(){
-  document.getElementById("successPopup").style.display = "none";
+  document.getElementById("successPopup").style.display="none";
 }
-
-fetch(scriptURL, {
-  method: "POST",
-  body: new FormData(form),
-  mode: "no-cors"
-})
-.then(() => {
-  showPopup();
-  form.reset();
-})
-.catch(error => alert("Error submitting form"));
 
 </script>
-
 </body>
 </html>

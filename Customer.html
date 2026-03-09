@@ -7,7 +7,7 @@
 
 <style>
 
-/* Adobe Dark Workspace */
+/* Adobe dark workspace */
 
 body{
 margin:0;
@@ -20,14 +20,14 @@ align-items:center;
 color:#ddd;
 }
 
-/* Panel like Photoshop properties panel */
+/* Panel */
 
 .panel{
-width:360px;
+width:380px;
 background:#2a2a2a;
 border:1px solid #3a3a3a;
 border-radius:6px;
-box-shadow:0 8px 25px rgba(0,0,0,0.7);
+box-shadow:0 10px 30px rgba(0,0,0,0.8);
 }
 
 /* Panel header */
@@ -88,7 +88,7 @@ width:35%;
 width:65%;
 }
 
-/* Button */
+/* Buttons */
 
 button{
 width:100%;
@@ -99,10 +99,21 @@ color:white;
 border-radius:3px;
 font-size:14px;
 cursor:pointer;
+margin-top:5px;
 }
 
 button:hover{
 background:#1473e6;
+}
+
+/* Check status button */
+
+#checkStatusBtn{
+background:#444;
+}
+
+#checkStatusBtn:hover{
+background:#555;
 }
 
 /* Error */
@@ -175,8 +186,7 @@ Registration
 <option value="+971">+971</option>
 </select>
 
-<input type="tel" name="phone" id="phone"
-pattern="[0-9]{10}" required>
+<input type="tel" name="phone" id="phone" pattern="[0-9]{10}" required>
 </div>
 
 <label>Payment Method</label>
@@ -189,6 +199,10 @@ pattern="[0-9]{10}" required>
 </select>
 
 <button type="submit">Submit</button>
+
+<button type="button" id="checkStatusBtn">
+Check Activation Status
+</button>
 
 </form>
 
@@ -205,7 +219,7 @@ pattern="[0-9]{10}" required>
 
 <h3>Success</h3>
 
-<p>Submission completed</p>
+<p>Your information has been submitted</p>
 
 <button onclick="closePopup()">OK</button>
 
@@ -215,10 +229,12 @@ pattern="[0-9]{10}" required>
 
 <script>
 
-const scriptURL="https://script.google.com/macros/s/AKfycbytJbioH6IX2TsZn8FXPAi9omdYVOYAEcorq6gbhutXJddIFQ05XNNdCcpy9B6CJog9/exec";
+const scriptURL="YOUR_SCRIPT_URL_HERE";
 
 const form=document.getElementById("myForm");
 const errorMsg=document.getElementById("errorMsg");
+
+/* Submit Form */
 
 form.addEventListener("submit",function(e){
 
@@ -256,6 +272,43 @@ form.reset();
 .catch(()=>alert("Error submitting form"));
 
 });
+
+/* Check Activation Status */
+
+document.getElementById("checkStatusBtn").addEventListener("click",function(){
+
+const email=document.getElementById("email").value;
+
+if(!email){
+errorMsg.innerHTML="Enter email to check status";
+return;
+}
+
+fetch(scriptURL,{
+method:"POST",
+body:new URLSearchParams({
+checkEmail:email
+})
+})
+
+.then(res=>res.text())
+
+.then(data=>{
+
+if(data==="FOUND"){
+alert("Activation already completed");
+}
+else{
+alert("No activation found for this email");
+}
+
+})
+
+.catch(()=>alert("Error checking status"));
+
+});
+
+/* Close popup */
 
 function closePopup(){
 document.getElementById("successPopup").style.display="none";
